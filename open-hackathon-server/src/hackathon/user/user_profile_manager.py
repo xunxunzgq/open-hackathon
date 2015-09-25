@@ -40,9 +40,32 @@ class UserProfileManager(Component):
     """Component to manager user profile"""
 
     def get_user_profile(self, user_id):
+        """
+        Get user profile from DB table user_profile
+
+        :param user_id:  the value of user_id column in DB table user_profile
+        :type user_id: integer
+
+        :return: a record of related user profile in DB table user_profile
+        :rtype: class UserProfile object
+        """
         return self.db.find_first_object_by(UserProfile, user_id=user_id)
 
     def create_user_profile(self, args):
+        """
+        Create a user profile in DB table user_profile if user does not exist, otherwise update user profile with
+        fields and values specified in 'args'
+
+        :param args: (key=value) paris, whose keys match the column name of DB table user_profile and values are
+                     corresponding column values
+        :type args:  dict
+
+        :return: a record of related user profile in DB table user_profile
+        :rtype: class UserProfile object
+
+        :raise: raise error when something goes wrong with DB operation
+        :type: internal server error
+        """
         self.log.debug("create_user_profile: %r" % args)
         try:
             exist = self.get_user_profile(g.user.id)
@@ -55,6 +78,19 @@ class UserProfileManager(Component):
             return internal_server_error("failed to create user profile")
 
     def update_user_profile(self, args):
+        """
+        Update user profile with fields and values specified in 'args'
+
+        :param args: (key=value) paris, whose keys match the column name of DB table user_profile and values are
+                     corresponding column values
+        :type args:  dict
+
+        :return: a record of related user profile in DB table user_profile
+        :rtype: class UserProfile object
+
+        :raise: raise error when something goes wrong with DB operation
+        :type: internal server error
+        """
         self.log.debug("update_user_profile")
         try:
             u_id = args["user_id"]

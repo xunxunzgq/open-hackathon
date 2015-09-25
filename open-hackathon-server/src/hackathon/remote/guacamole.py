@@ -45,7 +45,16 @@ from flask import g
 
 
 class GuacamoleInfo(Component):
+    """Process guacamole information"""
     def getConnectInfo(self):
+        """
+        Get guacamole connection information from DB table virtual_environment according to request arg field of "name"
+
+        :return: value of column remote_paras in DB table virtual_environment
+                 if no record is found in DB, return not_found method
+                 if record exists but user_id of experiment does not equal global user id, return forbidden method
+        :rtype: json form
+        """
         connection_name = request.args.get("name")
         guacamole_config = self.db.find_first_object_by(VirtualEnvironment,
                                                         name=connection_name,
